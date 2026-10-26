@@ -1,0 +1,39 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Безопасность{% endblock %}
+
+{% block content %}
+<section class="card">
+    <h2>Безопасность</h2>
+    <form method="post" action="{{ url_for('admin.security_save') }}" class="grid-2">
+        <div class="form-row">
+            <label for="min_length">Минимальная длина пароля</label>
+            <input id="min_length" name="min_length" type="number" min="6" max="64" value="8" required>
+        </div>
+        <div class="form-row">
+            <label class="checkbox">
+                <input type="checkbox" name="require_digits" checked>
+                <span>Требовать цифры</span>
+            </label>
+        </div>
+        <div class="form-row">
+            <label class="checkbox">
+                <input type="checkbox" name="require_upper">
+                <span>Требовать заглавные буквы</span>
+            </label>
+        </div>
+        <div class="form-row">
+            <label for="lock_threshold">Блокировка после N неудачных входов</label>
+            <input id="lock_threshold" name="lock_threshold" type="number" min="3" max="20" value="5" required>
+        </div>
+        <div class="form-actions">
+            <button class="btn primary" type="submit">Сохранить политику</button>
+        </div>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    </form>
+    <p class="muted">Значения сохраняются в <code>admin_setting.svalue</code> для ключа
+        <code>security.password_policy</code>.
+    </p>
+</section>
+
+{% endblock %}

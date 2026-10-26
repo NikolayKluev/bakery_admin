@@ -1,0 +1,46 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Административная панель{% endblock %}
+
+{% block content %}
+
+    <h1>Панель администратора</h1>
+    <p class="muted">Доступ к изменению настроек ограничен правами <code>settings.edit</code> и ролью
+        <code>admin</code>.
+    </p>
+
+    <section class="card">
+        <a href="{{ url_for('admin.register') }}">Регистрация нового пользователя</a>
+    </section>
+
+    <section class="card">
+        <a href="{{ url_for('admin.security_page') }}">Безопасность</a>
+    </section>
+
+    <section class="card">
+        <a href="{{ url_for('admin.integrity_page') }}">Интеграции</a>
+    </section>
+
+    <section class="card">
+        <a href="{{ url_for('admin.backup_page') }}">Резервное копирование</a>
+    </section>
+
+    <section class="card">
+        <a href="{{ url_for('admin.users_role_page') }}">Пользователи</a>
+    </section>
+
+    <section class="card">
+        <a href="{{ url_for('admin.assign_permission') }}">Права ролей</a>
+    </section>
+    
+    <section class="card">
+        <a href="{{ url_for('admin.logs_page') }}">Журнал авторизации</a>
+    </section>
+
+    <section class="card">
+        <a href="{{ url_for('admin.all_products') }}">Продукты и ингридиенты</a>
+    </section>
+    
+    <section class="card"></section>
+
+{% endblock %}

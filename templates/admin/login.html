@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8">
+  <title>Вход</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+  <div class="container">
+    <h1>Вход в админ-панель</h1>
+    <!-- Блок сообщений Flask -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="flash {% if category == 'success' %}success{% elif category == 'error' %}error{% endif %}">
+      {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <form method="post">
+      {{ form.hidden_tag() }}
+      <div>
+        {{ form.login.label }}<br>{{ form.login(size=32) }}
+        {% for e in form.login.errors %}<div class="flash error">{{ e }}</div>{% endfor %}
+      </div>
+      <div style="margin-top:.5rem">
+        {{ form.password.label }}<br>{{ form.password(size=32) }}
+        {% for e in form.password.errors %}<div class="flash error">{{ e }}</div>{% endfor %}
+      </div>
+      <div style="margin-top:.5rem">
+          {{ form.submit(class_="btn btn-primary w-100") }} 
+      </div>      
+    </form>
+  </div>
+</body>
+
+</html>

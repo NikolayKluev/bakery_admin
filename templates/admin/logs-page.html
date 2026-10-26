@@ -1,0 +1,63 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Журнал авторизации{% endblock %}
+
+{% block content %}
+
+<h2>Журналы авторизации</h2>
+<form method="get" action="{{ url_for('admin.logs_page') }}" class="grid-3">
+    <div class="form-row">
+        <label for="q_login">Логин</label>
+        <input id="q_login" name="login" type="text" placeholder="filter..." value="{{ form.login.data|default('', true) }}">
+    </div>
+    <div class="form-row">
+        <label for="q_from">С</label>
+        <input id="q_from" name="from" type="datetime-local" 
+            value="{% if form.date_from.data %}{{ form.date_from.data.strftime('%Y-%m-%dT%H:%M') }}{% endif %}">
+    </div>
+    <div class="form-row">
+        <label for="q_to">По</label>
+        <input id="q_to" name="to" type="datetime-local" 
+            value="{% if form.date_to.data %}{{ form.date_to.data.strftime('%Y-%m-%dT%H:%M') }}{% endif %}">
+    </div>
+    <div class="form-actions">
+        <button class="btn primary" type="submit">Показать</button>
+    </div>
+</form>
+
+<div class="table-scroll" style="margin-top:1rem">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Время</th>
+                <th>Логин</th>
+                <th>IP</th>
+                <th>User-Agent</th>
+                <th>Успех</th>
+                <th>Причина</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for authlog in authlogs %}
+            <tr>
+                <td>{{ authlog.created_at.strftime('%Y-%m-%d') }}</td>
+                <td>{{ authlog.attempted_login }}</td>
+                <td>{{ authlog.ip }}</td>
+                <td>{{ authlog.user_agent }}</td>
+                <!-- Условный оператор для статуса (badge) -->
+                <td>
+                    {% if authlog.is_success %}
+                    <span class="badge ok">Да</span>
+                    {% else %}
+                    <span class="badge no">Нет</span>
+                    {% endif %}
+                </td>
+                <td>{{ authlog.reason }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<p class="muted">Источник: таблица <code>auth_log</code>.</p>
+
+{% endblock %}

@@ -1,0 +1,42 @@
+{# templates/admin/roles.html #}
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h3 style="margin-top:1.25rem">Права ролей</h3>
+<div class="table-scroll">
+    <table class="table">
+        <thead><tr><th>Роль</th><th>Право</th></tr></thead>
+        <tbody>
+            {% for role in roles %}
+                {% for perm in role.permissions %}
+                    <tr>
+                        <td>{{ role.name }}</td>
+                        <td>{{ perm.code }} - {{ perm.description|truncate(60) }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr><td colspan="2">Нет назначенных прав.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<form method="post" action="" novalidate>
+    <!-- Автоматически добавляет скрытое поле с токеном -->
+    {{ form.hidden_tag() }}
+
+    <div class="form-row">
+        {{ form.r_role.label(class_="form-label") }}
+        {{ form.r_role(class_="form-control") }}
+    </div>
+
+    <div class="form-row">
+        {{ form.r_perm.label(class_="form-label") }}
+        {{ form.r_perm(class_="form-control") }}
+    </div>
+
+    <div class="form-actions">
+        {{ form.submit(class_="btn btn-primary") }}
+    </div>
+</form>
+{% endblock %}

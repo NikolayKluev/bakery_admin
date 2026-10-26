@@ -1,0 +1,54 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Список пользователей и ролей{% endblock %}
+
+{% block content %}
+
+<h2>Пользователи и роли</h2>
+
+<div class="table-scroll">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Логин</th>
+                <th>ФИО</th>
+                <th>Роль</th>
+                <th>Активен</th>
+                <th>E-mail</th>
+                <th>Телефон</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr onclick="location.href='{{ url_for('admin.edit_user', id=user.id) }}'" style="cursor: pointer;">
+                <!-- Доступ к атрибутам объекта модели -->
+                <td>{{ user.id }}</td>
+                <td>{{ user.login }}</td>
+                <td>{{ user.full_name }}</td>
+                <td>
+                    {% if user.role.value == 'Admin' %}Администратор
+                    {% elif user.role.value == 'Cashier' %}Кассир
+                    {% elif user.role.value == 'Backer' %}Инвестор
+                    {% else %}Неизвестно
+                    {% endif %}
+                </td>
+                <!-- Условный оператор для статуса (badge) -->
+                <td>
+                    {% if user.is_active %}
+                    <span class="badge ok">Да</span>
+                    {% else %}
+                    <span class="badge no">Нет</span>
+                    {% endif %}
+                </td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.phone }}</td>
+            </tr> {% endfor %}
+        </tbody>
+    </table>
+    <p class="muted">Нажмите на пользователя для редактирования</p>
+</div>
+
+
+
+{% endblock %}

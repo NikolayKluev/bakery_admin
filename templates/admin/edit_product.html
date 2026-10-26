@@ -1,0 +1,29 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+<form method="post">
+    {{ form.hidden_tag() }}
+
+    <div>
+        {{ form.name.label(class="form-label") }}
+        {{ form.name(class="form-control") }}
+    </div>
+
+    <div>
+        {{ form.category.label(class="form-label") }}
+        {{ form.category(class="form-control") }}
+    </div>
+
+    <div>
+        {{ form.unit_price.label(class="form-label") }}
+        {{ form.unit_price(class="form-control") }}
+    </div>
+
+    <div style="margin:.5rem">
+        {{ form.submit(class_="btn btn-primary w-100") }}
+    </div>
+
+</form>
+{% endblock %}

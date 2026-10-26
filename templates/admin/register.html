@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Регистрация нового пользователя{% endblock %}
+
+{% block content %}
+        <div class="container">
+            <h2>Регистрация</h2>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="alert alert-{% if category == 'success'%}success{% elif category == 'info'%}primary{%else%}danger{% endif %}" role="alert">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <!-- Форма -->
+            <form method="post">
+                {{ form.hidden_tag() }}  {# CSRF-защита #}
+
+                <div style="margin-top:.5rem">
+                    {{ form.login.label(class_="form-label") }} <br>
+                    {{ form.login(class_="form-control", placeholder="Только латиница и цифры, мин. 6 знаков") }}
+                    {% if form.login.errors %}
+                        {% for error in form.login.errors %}
+                            <span style="color: red;">{{ error }}</span><br>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div style="margin-top:.5rem">
+                    {{ form.full_name.label(class_="form-label") }} <br>
+                    {{ form.full_name(class_="form-control") }}
+                </div>
+
+                <div style="margin-top:.5rem">
+                    {{ form.email.label(class_="form-label") }} <br>
+                    {{ form.email(class_="form-control") }}
+                    {% if form.email.errors %}
+                        {% for error in form.email.errors %}
+                            <span style="color: red;">{{ error }}</span><br>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div style="margin-top:.5rem">
+                    {{ form.password.label(class_="form-label") }} <br>
+                    {{ form.password(class_="form-control") }}
+                    {% if form.password.errors %}
+                        {% for error in form.password.errors %}
+                            <span style="color: red;">{{ error }}</span><br>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div style="margin:.5rem">
+                    {{ form.confirm_password.label(class_="form-label") }} <br>
+                    {{ form.confirm_password(class_="form-control") }}
+                    {% if form.confirm_password.errors %}
+                        {% for error in form.confirm_password.errors %}
+                            <span style="color: red;">{{ error }}</span><br>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div style="margin-top:1rem">
+                    {{ form.is_active(class_="form-check-input") }}
+                    {{ form.is_active.label(class_="form-check-label") }}
+                </div>
+
+                <div style="margin:.5rem">
+                    {{ form.submit(class_="btn btn-primary w-100") }}    
+                </div>
+            
+            </form>
+        </div>    
+{% endblock %}

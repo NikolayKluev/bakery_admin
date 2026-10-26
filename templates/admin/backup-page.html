@@ -1,0 +1,79 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Интеграции{% endblock %}
+
+{% block content %}
+
+<h2>Резервное копирование</h2>
+
+<!-- Форма настроек -->
+<form method="post" action="{{ url_for('admin.save_backup_settings') }}" class="grid-2">
+    <div class="form-row">
+        <label class="checkbox">
+            <input type="checkbox" name="backup_enabled" {% if config.get('enabled') %}checked{% endif %}>
+            <span>Включить автокопирование</span>
+        </label>
+    </div>
+    <div class="form-row">
+        <label for="retention">Хранение копий (дней)</label>
+        <input id="retention" name="retention_days" type="number" min="1" max="365"
+            value="{{ config.get('retention_days', 14) }}" required>
+    </div>
+    <div class="form-actions">
+        <button class="btn primary" type="submit">Сохранить настройки</button>
+    </div>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+</form>
+
+<h3 style="margin-top:1.25rem">Журнал бэкапов</h3>
+<div class="table-scroll">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Начало</th>
+                <th>Окончание</th>
+                <th>Статус</th>
+                <th>Файл</th>
+                <th>Сообщение</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in backups %}
+            <tr>
+                <td>{{ log.id }}</td>
+                <td>{{ log.started_at.strftime('%Y-%m-%d %H:%M') if log.started_at else '-' }}</td>
+                <td>{{ log.finished_at.strftime('%Y-%m-%d %H:%M') if log.finished_at else '...' }}</td>
+                <td>
+                    {% if log.status == 'success' %}
+                    <span class="badge ok">{{ log.status }}</span>
+                    {% elif log.status == 'failed' %}
+                    <span class="badge err">{{ log.status }}</span>
+                    {% else %}
+                    <span class="badge warn">{{ log.status }}</span>
+                    {% endif %}
+                </td>
+                <td><code>{{ log.file_path or '-' }}</code></td>
+                <td>{{ log.message or 'В процессе...' }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" class="text-center text-muted">Журнал пуст.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Кнопка запуска -->
+<div style="margin-top: 1rem;">
+    <form method="post" action="{{ url_for('admin.run_backup') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn primary" type="submit">Создать бэкап сейчас</button>
+    </form>
+</div>
+
+<p class="muted">Хранение: таблица <code>backup_log</code>. Настройки: <code>admin_setting</code> (skey:
+    backup.config).</p>
+
+{% endblock %}

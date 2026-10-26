@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>404 — Страница не найдена</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h2>Ошибка 404</h2>
+    <p>Страница не найдена.</p>
+    <a href="{{ url_for('admin.dashboard') }}">Назад в панель</a>
+  </div>
+</body>
+</html>

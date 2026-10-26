@@ -1,0 +1,67 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Редактирование пользователя{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <h2>Редактирование пользователя</h2>
+        
+        <!-- Форма редактирования -->
+        <form method="post" action="{{ url_for('admin.edit_user', id=user.id) }}" class="grid-3">
+            <input type="hidden" name="user_id" value="{{ user.id }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <!-- Логин (обычно не меняют, но можно разрешить) -->
+            <div class="form-row">
+                <label for="u_login">Логин</label>
+                <input id="u_login" name="login" type="text" value="{{ user.login }}" required pattern="^[A-Za-z0-9]{3,}$">
+            </div>
+
+            <!-- Полное имя -->
+            <div class="form-row">
+                <label for="u_fullname">ФИО</label>
+                <input id="u_fullname" name="full_name" type="text" value="{{ user.full_name }}">
+            </div>
+
+            <!-- Email -->
+            <div class="form-row">
+                <label for="u_email">Email</label>
+                <input id="u_email" name="email" type="email" value="{{ user.email }}">
+            </div>
+
+            <!-- Роль (Select) -->
+            <div class="form-row">
+                <label for="u_role">Роль</label>
+                <select id="u_role" name="role_id" required>
+                    <option value="">Выберите роль</option>
+                    <option value="1" {% if user.role.value == 'Admin' %}selected{% endif %}>Admin</option>
+                    <option value="2" {% if user.role.value == 'Cashier' %}selected{% endif %}>Cashier</option>
+                    <option value="3" {% if user.role.value == 'Backer' %}selected{% endif %}>Backer</option>
+                </select>
+            </div>
+
+            <!-- Статус активности -->
+            <div class="form-row">
+                <label class="checkbox">
+                    <input type="checkbox" name="is_active" {% if user.is_active %}checked{% endif %}>
+                    <span>Аккаунт активен</span>
+                </label>
+            </div>
+
+            <!-- Пароль (опционально) -->
+            <div class="form-row">
+                <label for="u_password">Новый пароль</label>
+                <input id="u_password" name="password" type="password" placeholder="Оставьте пустым, чтобы не менять">
+                <small class="muted">Пароль будет захеширован автоматически.</small>
+            </div>
+
+            <!-- Кнопки -->
+            <div class="form-actions">
+                <button class="btn primary" type="submit">Сохранить изменения</button>
+                <a class="btn link" href="{{ url_for('admin.dashboard') }}">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

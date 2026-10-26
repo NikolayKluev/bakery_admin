@@ -1,0 +1,96 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Интеграции{% endblock %}
+
+{% block content %}
+
+<section class="card">
+    <h2>Интеграции</h2>
+
+    <!-- Список интеграций -->
+    <div class="table-scroll">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Тип</th>
+                    <th>Название</th>
+                    <th>Активна</th>
+                    <th>Создано</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for integration in integrations %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ integration.type }}</td>
+                    <td>{{ integration.name }}</td>
+                    <!-- Условный вывод бейджа в зависимости от is_active -->
+                    <td> {% if integration.is_active %}
+                        <span class="badge ok">Да</span>
+                        {% else %}
+                        <span class="badge warn">Нет</span>
+                        {% endif %}
+                    </td>
+                    <!-- Форматирование даты (если нужно) -->
+                    <td>{{ integration.created_at.strftime('%Y-%m-%d') }}</td>
+                </tr> {% else %}
+                <!-- Блок, который сработает, если таблица в БД пуста -->
+                <tr>
+                    <td colspan="5" class="text-center text-muted"> Интеграции не найдены. </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <form method="post" action="{{ url_for('admin.manage_integration') }}" class="grid-2">
+        
+        <div class="form-row">
+            <label for="int_type">Тип</label>
+            <select id="int_type" name="type" required>
+                <option value="">Выберите</option>
+                <option value="payment" {% if integration and integration.type=='payment' %}selected{% endif %}>
+                    Платёж</option>
+                <option value="email" {% if integration and integration.type=='email' %}selected{% endif %}>
+                    E-mail</option>
+                <option value="marketing" {% if integration and integration.type=='marketing' %}selected{% endif %}>
+                    Маркетинг</option>
+                <option value="analytics" {% if integration and integration.type=='analytics' %}selected{% endif %}>
+                    Аналитика</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <label for="int_name">Название</label>
+            <input id="int_name" name="name" type="text" required maxlength="100"
+                value="{{ integration.name if integration else '' }}" placeholder="Напр. SMTP / OnlinePay">
+        </div>
+
+        <div class="form-row">
+            <label for="int_config">Конфигурация (JSON)</label>
+            <textarea id="int_config" name="config" rows="6" required>
+            {{ integration.config if integration else '' }}
+        </textarea>
+        </div>
+
+        <div class="form-row">
+            <label class="checkbox">
+                <input type="checkbox" name="is_active" {% if integration and integration.is_active %}checked{% endif
+                    %}>
+                <span>Активировать</span>
+            </label>
+        </div>
+
+        <div class="form-actions">
+            <button class="btn primary" type="submit">
+                {% if integration %}Сохранить изменения{% else %}Добавить интеграцию{% endif %}
+            </button>
+        </div>
+
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    </form>
+</section>
+
+
+{% endblock %}
